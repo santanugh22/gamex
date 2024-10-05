@@ -11,8 +11,8 @@ const StackNavigator = () => {
       headerShown: false,
     }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Details" component={Deck} />
-        <Stack.Screen name="Profile" component={Settings} />
+        <Stack.Screen name="Deck" component={Deck} />
+        <Stack.Screen name="Settings" component={Settings} />
     </Stack.Navigator>
   </NavigationContainer>;
 };

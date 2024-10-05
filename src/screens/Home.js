@@ -8,6 +8,7 @@ import {
   TouchableHighlight,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -16,6 +17,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 const { height: HEIGHT, width: WIDTH } = Dimensions.get("screen");
 const Home = () => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
   return (
     <SafeAreaView
       style={{
@@ -64,7 +66,7 @@ const Home = () => {
         {/*  Buttons*/}
         <View className="self-center justify-center items-center mt-16 gap-10">
           <View>
-            <TouchableHighlight>
+            <TouchableHighlight onPress={()=>navigation.navigate("Deck")}>
               <View className="flex-row justify-between items-center gap-7 h-[60] w-[250] bg-green-500 rounded-2xl">
                 <View className=" justify-center items-center px-4">
                   <Text>
@@ -131,7 +133,7 @@ const Home = () => {
           <View className="flex-row justify-center items-center gap-1">
             <View>
               <Text className="text-white">
-                <FontAwesome name="codiepie" size={24}  />
+                <FontAwesome name="codiepie" size={24} />
               </Text>
             </View>
             <View className="border px-1 py-1  rounded-3xl border-white ">
