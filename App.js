@@ -5,6 +5,7 @@ import StackNavigator from "./src/navigator/StackNavigator";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { useEffect } from "react";
+import { RevenueCatProvider } from "./src/context/RevenueCatProvider";
 SplashScreen.hideAsync();
 export default function App() {
   const [loaded, error] = useFonts({
@@ -29,9 +30,11 @@ export default function App() {
     return null;
   }
   return (
-    <View style={styles.container}>
-      <StackNavigator />
-    </View>
+    <RevenueCatProvider>
+      <View style={styles.container}>
+        <StackNavigator />
+      </View>
+    </RevenueCatProvider>
   );
 }
 
