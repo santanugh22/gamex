@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   TouchableHighlight,
+  Pressable,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -38,7 +39,9 @@ const Home = () => {
       <View style={{ flex: 1 }}>
         {/* Header */}
         <View style={styles.header}>
-          <MaterialIcons name="settings" size={34} color="white" />
+          <Pressable onPress={()=>navigation.navigate("Settings")}>
+            <MaterialIcons name="settings" size={34} color="white" />
+          </Pressable>
         </View>
 
         {/* Text */}
@@ -66,7 +69,7 @@ const Home = () => {
         {/*  Buttons*/}
         <View className="self-center justify-center items-center mt-16 gap-10">
           <View>
-            <TouchableHighlight onPress={()=>navigation.navigate("Deck")}>
+            <TouchableHighlight onPress={() => navigation.navigate("Deck")}>
               <View className="flex-row justify-between items-center gap-7 h-[60] w-[250] bg-green-500 rounded-2xl">
                 <View className=" justify-center items-center px-4">
                   <Text>

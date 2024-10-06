@@ -34,6 +34,8 @@ const Deck = () => {
     },
   ];
 
+  const filterData=[]
+
 
   const renderItems=useCallback(({item})=>{
     return <DeckCard card={item}/>
@@ -87,40 +89,64 @@ const Deck = () => {
         </View>
 
         {/* Package buy */}
-        <ImageBackground source={require("../assets/curvybg.png")} style={{
-          height:150,
-          width:420,
-          borderRadius:30,
-          overflow:'hidden',
-          alignSelf:"center"
-        }}>
-         
-            <View className="flex-row">
-              <View className="justify-center items-center h-full w-1/3 top-5">
-                <Text>
-                  <FonAwesome name="lock" size={44} color="black" />
+        <ImageBackground
+          source={require("../assets/curvybg.png")}
+          style={{
+            height: 150,
+            width: 420,
+            borderRadius: 30,
+            overflow: "hidden",
+            alignSelf: "center",
+          }}
+        >
+          <View className="flex-row">
+            <View className="justify-center items-center h-full w-1/3 top-5">
+              <Text>
+                <FonAwesome name="lock" size={44} color="black" />
+              </Text>
+            </View>
+            <View className="w-1/3 h-full justify-center items-center">
+              <View>
+                <Text className="text-indigo-950 text-xl font-[Poppins-Bold] tracking-tighter">
+                  EXPLORE
+                </Text>
+                <Text className="text-indigo-950 text-xl font-[Poppins-Bold] tracking-tighter">
+                  PREMIUM DECKS
                 </Text>
               </View>
               <View>
-                <View>
-                  <Text>
-                    Explore 
-                  </Text>
-                  <Text>
-                    PREMIUM DECKS
-                  </Text>
-                </View>
-                <View>
-                  
-                </View>
+                <Text className="text-indigo-950 text-xl font-[Poppins-Bold] tracking-tighter">
+                  Unlock all decks
+                </Text>
               </View>
-              <View></View>
             </View>
-
+            <View className="w-1/3 h-full justify-center items-center">
+              <Pressable>
+                <View
+                  className="bg-indigo-950 px-4 py-2 rounded-3xl"
+                  style={{
+                    backgroundColor: "#FFB6C1",
+                  }}
+                >
+                  <Text className="text-white font-[Poppins-Bold] tracking-tighter">
+                    BUY
+                  </Text>
+                </View>
+              </Pressable>
+            </View>
+          </View>
         </ImageBackground>
 
         {/* Filters */}
-        <View></View>
+        <View className="mt-3">
+          <View className="m-4 px-3">
+            <Text className="text-2xl font-[Poppins-SemiBold] text-white tracking-widest">FILTERS</Text>
+          </View>
+          <View>
+
+
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
