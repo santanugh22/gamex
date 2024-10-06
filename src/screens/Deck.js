@@ -1,14 +1,57 @@
-import { StyleSheet, Text, View, SafeAreaView ,Image, Pressable, FlatList, ImageBackground} from "react-native";
+import React, { useCallback, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  Pressable,
+  FlatList,
+  ImageBackground,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import FonAwesome from "@expo/vector-icons/FontAwesome";
-import { useCallback } from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import DeckCard from "../components/DeckCard";
+import FilterComponent from "../components/FilterComponent";
+
 const Deck = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const [filterData, setFilterData] = useState([
+    {
+      id: 1,
+      title: "FUNNY",
+      numOfCards: 80,
+      isSelected: false,
+      backgroundColor: "#FFB6C1",
+      trackColor: "#FFB6C1",
+      thumbColor: "#FFB6C1",
+      image: require("../assets/funny.png"),
+    },
+    {
+      id: 2,
+      title: "AWKWARD",
+      numOfCards: 80,
+      isSelected: true,
+      backgroundColor: "#FFD700",
+      trackColor: "#FFA500",
+      thumbColor: "#FF4500",
+      image: require("../assets/awkward.png"),
+    },
+    {
+      id: 3,
+      title: "ADULT",
+      numOfCards: 80,
+      isSelected: false,
+      backgroundColor: "#98FB98",
+      trackColor: "#32CD32",
+      thumbColor: "#228B22",
+      image: require("../assets/egg.png"),
+    },
+  ]);
 
   const deckData = [
     {
@@ -34,13 +77,27 @@ const Deck = () => {
     },
   ];
 
-  const filterData=[]
+  const renderItems = useCallback(({ item }) => {
+    return <DeckCard card={item} />;
+  }, []);
 
+  const renderFilterItems = useCallback(({ item }) => {
+    return <FilterComponent filterItem={item} toggleSwitch={toggleSwitch} />;
+  }, []);
 
-  const renderItems=useCallback(({item})=>{
-    return <DeckCard card={item}/>
+  const toggleSwitch = (id) => {
+    const updatedFilterData = filterData.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          isSelected: !item.isSelected,
+        };
+      }
+      return item;
+    });
+    setFilterData(updatedFilterData);
+  };
 
-  },[])
   return (
     <SafeAreaView
       style={{
@@ -64,7 +121,6 @@ const Deck = () => {
           <Pressable onPress={() => navigation.navigate("Settings")}>
             <MaterialIcons name="settings" size={34} color="white" />
           </Pressable>
-
           <AntDesign name="infocirlce" size={32} color="white" />
         </View>
 
@@ -102,11 +158,11 @@ const Deck = () => {
           <View className="flex-row">
             <View className="justify-center items-center h-full w-1/3 top-5">
               <Text>
-                <FonAwesome name="lock" size={44} color="black" />
+                <FontAwesome name="lock" size={44} color="black" />
               </Text>
             </View>
             <View className="w-1/3 h-full justify-center items-center">
-              <View>
+              <View className="mt-7">
                 <Text className="text-indigo-950 text-xl font-[Poppins-Bold] tracking-tighter">
                   EXPLORE
                 </Text>
@@ -114,42 +170,40 @@ const Deck = () => {
                   PREMIUM DECKS
                 </Text>
               </View>
-              <View>
-                <Text className="text-indigo-950 text-xl font-[Poppins-Bold] tracking-tighter">
-                  Unlock all decks
+              <View className="bg-indigo-950 p-1 w-full py-2 rounded-2xl">
+                <Text className="text-white text-sm font-[Poppins-Bold] tracking-tighter">
+                  Unlock all decks $1000
                 </Text>
               </View>
             </View>
             <View className="w-1/3 h-full justify-center items-center">
-              <Pressable>
-                <View
-                  className="bg-indigo-950 px-4 py-2 rounded-3xl"
-                  style={{
-                    backgroundColor: "#FFB6C1",
-                  }}
-                >
-                  <Text className="text-white font-[Poppins-Bold] tracking-tighter">
-                    BUY
-                  </Text>
-                </View>
-              </Pressable>
+              <View>
+                <Image source={require("../assets/cards.png")} className="h-16 w-16"/>
+              </View>
             </View>
           </View>
         </ImageBackground>
 
         {/* Filters */}
         <View className="mt-3">
-          <View className="m-4 px-3">
-            <Text className="text-2xl font-[Poppins-SemiBold] text-white tracking-widest">FILTERS</Text>
+          <View className="m-4 px-3 flex-1">
+            <Text className="text-2xl font-[Poppins-SemiBold] text-white tracking-widest">
+              FILTERS
+            </Text>
           </View>
           <View>
-
-
+            <FlatList
+              data={filterData}
+              renderItem={renderFilterItems}
+              contentContainerStyle={{
+                gap: 10,
+              }}
+            />
           </View>
         </View>
       </View>
     </SafeAreaView>
   );
 };
-export default Deck;
 
+export default Deck;
