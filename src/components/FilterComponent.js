@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-
+import { StyleSheet, Text, View, Dimensions, } from "react-native";
+import Animated from "react-native-reanimated";
 const { height: HEIGHT, width: WIDTH } = Dimensions.get("screen");
 const FilterComponent = () => {
   return (
-    <View>
+    <Animated.View>
       <Text>FilterComponent</Text>
-    </View>
+    </Animated.View>
   );
 };
 export default FilterComponent;

@@ -1,8 +1,9 @@
-import { StyleSheet, Text, View, SafeAreaView ,Image, Pressable, FlatList} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView ,Image, Pressable, FlatList, ImageBackground} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import FonAwesome from "@expo/vector-icons/FontAwesome";
 import { useCallback } from "react";
 import DeckCard from "../components/DeckCard";
 const Deck = () => {
@@ -68,17 +69,55 @@ const Deck = () => {
         {/* Choose deck */}
         <View className="mt-10">
           <View className="justify-center items-center">
-            <Text className="font-[Poppins-Bold] text-3xl tracking-widest text-white">CHOOSE DECK</Text>
+            <Text className="font-[Poppins-Bold] text-3xl tracking-widest text-white">
+              CHOOSE DECK
+            </Text>
           </View>
           <View className="mt-7 justify-center items-center">
-            <FlatList data={deckData} renderItem={renderItems} horizontal scrollEnabled={false} contentContainerStyle={{
-              gap:17
-            }}/>
+            <FlatList
+              data={deckData}
+              renderItem={renderItems}
+              horizontal
+              scrollEnabled={false}
+              contentContainerStyle={{
+                gap: 17,
+              }}
+            />
           </View>
         </View>
 
         {/* Package buy */}
-        <View></View>
+        <ImageBackground source={require("../assets/curvybg.png")} style={{
+          height:150,
+          width:420,
+          borderRadius:30,
+          overflow:'hidden',
+          alignSelf:"center"
+        }}>
+         
+            <View className="flex-row">
+              <View className="justify-center items-center h-full w-1/3 top-5">
+                <Text>
+                  <FonAwesome name="lock" size={44} color="black" />
+                </Text>
+              </View>
+              <View>
+                <View>
+                  <Text>
+                    Explore 
+                  </Text>
+                  <Text>
+                    PREMIUM DECKS
+                  </Text>
+                </View>
+                <View>
+                  
+                </View>
+              </View>
+              <View></View>
+            </View>
+
+        </ImageBackground>
 
         {/* Filters */}
         <View></View>
