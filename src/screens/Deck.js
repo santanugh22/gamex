@@ -10,25 +10,27 @@ const Deck = () => {
   const navigation = useNavigation();
 
   const deckData = [
-    // {
-    //   id: 1,
-    //   title: "PARTY AND FUN",
-    //   isLocked: false,
-    //   image: require("../assets/party.png"),
-    // },
-    // {
-    //   id: 2,
-    //   title: "PARTY AND FUN",
-    //   isLocked: false,
-    //   image: require("../assets/party.png"),
-    // },
+    {
+      id: 1,
+      title: "PARTY AND FUN",
+      isLocked: false,
+      image: require("../assets/party.png"),
+      color: "#FFB6C1",
+    },
+    {
+      id: 2,
+      title: "FOOD",
+      isLocked: false,
+      image: require("../assets/food.png"),
+      color: "#B2EC5D",
+    },
     {
       id: 3,
-      title: "Buy",
+      title: "RELATIONSHIPS",
       isLocked: true,
       image: require("../assets/relationships.png"),
+      color: "#F87171",
     },
-
   ];
 
 
@@ -66,7 +68,7 @@ const Deck = () => {
         {/* Choose deck */}
         <View className="mt-10">
           <View className="justify-center items-center">
-            <Text>CHOOSE DECK</Text>
+            <Text className="font-[Poppins-Bold] text-3xl tracking-widest text-white">CHOOSE DECK</Text>
           </View>
           <View className="mt-7 justify-center items-center">
             <FlatList data={deckData} renderItem={renderItems} horizontal scrollEnabled={false} contentContainerStyle={{
