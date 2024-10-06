@@ -1,7 +1,5 @@
 ## This game app is build with React Native with Expo framework . Used revenue cat for the in App purchases .
 
-
-
 ## Installation
 
 ```bash 
@@ -15,11 +13,17 @@ npm start
 ```
 
 ## Screenshots
-![Screenshot](/images/img1.png)
-![Screenshot](/images/img2.png)
-![Screenshot](/images/img3.png)
-![Screenshot](/images/img4.png)
+
+<table>
+    <tr>
+        <td><img src="/images/img1.png" width="200"/></td>
+        <td><img src="/images/img2.png" width="200"/></td>
+    </tr>
+    <tr>
+        <td><img src="/images/img3.png" width="200"/></td>
+        <td><img src="/images/img4.png" width="200"/></td>
+    </tr>
+</table>
 ![Screenshot](/images/img5.png)
 
-
-#The app is ready to be installed and used .
+# The app is ready to be installed and used.
