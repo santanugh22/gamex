@@ -24,6 +24,6 @@ npm start
         <td><img src="/images/img4.png" width="200"/></td>
     </tr>
 </table>
-![Screenshot](/images/img5.png)
 
-# The app is ready to be installed and used.
+
+## The app is ready to be installed and used.
