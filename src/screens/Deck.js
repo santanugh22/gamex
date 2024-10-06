@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,7 @@ import {
   Pressable,
   FlatList,
   ImageBackground,
+  Dimensions
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +17,9 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import DeckCard from "../components/DeckCard";
 import FilterComponent from "../components/FilterComponent";
+
+
+const {height:HEIGHT,width:WIDTH} = Dimensions.get('window');
 
 const Deck = () => {
   const insets = useSafeAreaInsets();
@@ -53,29 +57,32 @@ const Deck = () => {
     },
   ]);
 
-  const deckData = [
-    {
-      id: 1,
-      title: "PARTY AND FUN",
-      isLocked: false,
-      image: require("../assets/party.png"),
-      color: "#FFB6C1",
-    },
-    {
-      id: 2,
-      title: "FOOD",
-      isLocked: false,
-      image: require("../assets/food.png"),
-      color: "#B2EC5D",
-    },
-    {
-      id: 3,
-      title: "RELATIONSHIPS",
-      isLocked: true,
-      image: require("../assets/relationships.png"),
-      color: "#F87171",
-    },
-  ];
+  const deckData = useMemo(
+    () => [
+      {
+        id: 1,
+        title: "PARTY AND FUN",
+        isLocked: false,
+        image: require("../assets/party.png"),
+        color: "#FFB6C1",
+      },
+      {
+        id: 2,
+        title: "FOOD",
+        isLocked: false,
+        image: require("../assets/food.png"),
+        color: "#B2EC5D",
+      },
+      {
+        id: 3,
+        title: "RELATIONSHIPS",
+        isLocked: true,
+        image: require("../assets/relationships.png"),
+        color: "#F87171",
+      },
+    ],
+    []
+  );
 
   const renderItems = useCallback(({ item }) => {
     return <DeckCard card={item} />;
@@ -85,18 +92,13 @@ const Deck = () => {
     return <FilterComponent filterItem={item} toggleSwitch={toggleSwitch} />;
   }, []);
 
-  const toggleSwitch = (id) => {
-    const updatedFilterData = filterData.map((item) => {
-      if (item.id === id) {
-        return {
-          ...item,
-          isSelected: !item.isSelected,
-        };
-      }
-      return item;
-    });
-    setFilterData(updatedFilterData);
-  };
+  const toggleSwitch = useCallback((id) => {
+    setFilterData((prevData) =>
+      prevData.map((item) =>
+        item.id === id ? { ...item, isSelected: !item.isSelected } : item
+      )
+    );
+  }, []);
 
   return (
     <SafeAreaView
@@ -136,7 +138,8 @@ const Deck = () => {
               data={deckData}
               renderItem={renderItems}
               horizontal
-              scrollEnabled={false}
+              keyExtractor={(item) => item.id.toString()}
+              initialNumToRender={3}
               contentContainerStyle={{
                 gap: 17,
               }}
@@ -148,8 +151,8 @@ const Deck = () => {
         <ImageBackground
           source={require("../assets/curvybg.png")}
           style={{
-            height: 150,
-            width: 420,
+            height: HEIGHT*0.15,
+            width: WIDTH*0.95,
             borderRadius: 30,
             overflow: "hidden",
             alignSelf: "center",
@@ -178,7 +181,10 @@ const Deck = () => {
             </View>
             <View className="w-1/3 h-full justify-center items-center">
               <View>
-                <Image source={require("../assets/cards.png")} className="h-16 w-16"/>
+                <Image
+                  source={require("../assets/cards.png")}
+                  className="h-16 w-16"
+                />
               </View>
             </View>
           </View>
@@ -195,6 +201,8 @@ const Deck = () => {
             <FlatList
               data={filterData}
               renderItem={renderFilterItems}
+              keyExtractor={(item) => item.id.toString()}
+              initialNumToRender={3}
               contentContainerStyle={{
                 gap: 10,
               }}

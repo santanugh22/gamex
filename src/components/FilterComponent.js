@@ -16,7 +16,7 @@ const FilterComponent = ({ filterItem, toggleSwitch }) => {
     <Animated.View
       style={{
         width: WIDTH * 0.9,
-        height: HEIGHT * 0.06,
+        height: HEIGHT * 0.08,
         backgroundColor: filterItem.backgroundColor,
         alignSelf: "center",
         borderRadius: 17,
