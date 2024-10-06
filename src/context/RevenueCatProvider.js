@@ -1,12 +1,8 @@
 import { useContext, createContext, useState, useEffect } from "react";
-import { Platform } from "react-native";
+import { Platform, Alert } from "react-native";
 import Purchases, { LOG_LEVEL } from "react-native-purchases";
 
 const RevenueCatContext = createContext(null);
-
-// const apiKeys = {
-//   ios: "appl_MOdzpKXixePcmhabljBfIwqxzbs",
-// };
 
 export const useRevenueCat = () => {
   return useContext(RevenueCatContext);
@@ -16,52 +12,81 @@ export const RevenueCatProvider = ({ children }) => {
   const [user, setUser] = useState({ bundle_purchased: false });
   const [packages, setPackages] = useState([]);
   const [isReady, setIsReady] = useState(false);
+
   useEffect(() => {
     const init = async () => {
-      if (Platform.OS === "ios") {
-        await Purchases.configure({
-          apiKey: "appl_MOdzpKXixePcmhabljBfIwqxzbs",
-        });
-      } else {
-        Alert("Platform not supported");
+      try {
+        if (Platform.OS === "ios") {
+          await Purchases.configure({
+            apiKey: "appl_MOdzpKXixePcmhabljBfIwqxzbs",
+          });
+        } else {
+          Alert.alert("Platform not configured for in-app purchases");
+        }
+        setIsReady(true);
+        Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+        await loadOfferings();
+      } catch (error) {
+        console.error("Error initializing Purchases:", error);
       }
-      setIsReady(true);
-      Purchases.setLogLevel(LOG_LEVEL.DEBUG);
-      await loadOfferings();
     };
-    init()
+    init();
   }, []);
 
-  //Load all the offerings a user can purchase
+  // Load all the offerings a user can purchase
   const loadOfferings = async () => {
     try {
-         console.log("MEOW");
-        const offerings = await Purchases.getOfferings();
-        console.log(offerings)
-        const currentOffering = offerings.current;
-       
-        console.log(currentOffering);
-        if (currentOffering) {
-             setPackages(currentOffering.availablePackages);
-           }
-        
+      console.log("MEOW");
+      const offerings = await Purchases.getOfferings();
+      console.log(offerings);
+      const currentOffering = offerings.current;
+      console.log(currentOffering);
+      if (currentOffering) {
+        setPackages(currentOffering.availablePackages);
+      }
     } catch (error) {
-        console.log(error)
-        
+      console.error("Error loading offerings:", error);
     }
- 
-
   };
 
-  const purchaseAPackage = async () => {};
+  const purchaseAPackage = async (packageToPurchase) => {
+    try {
+      const { purchaserInfo, productIdentifier } =
+        await Purchases.purchasePackage(packageToPurchase);
+      if (purchaserInfo.entitlements.active["your_entitlement_id"]) {
+        setUser({ bundle_purchased: true });
+      }
+    } catch (error) {
+      if (!error.userCancelled) {
+        console.error("Error purchasing package:", error);
+      }
+    }
+  };
 
-  // update customer info
-  const updateCustomerInfo = async (customerInfo) => {};
+  // Update customer info
+  const updateCustomerInfo = async () => {
+    try {
+      const customerInfo = await Purchases.getCustomerInfo();
+      setUser({
+        bundle_purchased: customerInfo.entitlements.active[
+          "your_entitlement_id"
+        ]
+          ? true
+          : false,
+      });
+    } catch (error) {
+      console.error("Error updating customer info:", error);
+    }
+  };
 
-  //restore previous purchase
+  // Restore previous purchase
   const restorePurchase = async () => {
-    const customer = await Purchases.restorePurchases();
-    return customer;
+    try {
+      const customer = await Purchases.restorePurchases();
+      return customer;
+    } catch (error) {
+      console.error("Error restoring purchases:", error);
+    }
   };
 
   const value = {
@@ -69,11 +94,13 @@ export const RevenueCatProvider = ({ children }) => {
     user,
     packages,
     purchaseAPackage,
+    updateCustomerInfo,
   };
-  if (!isReady) {
 
-    return <></>;
+  if (!isReady) {
+    return null;
   }
+
   return (
     <RevenueCatContext.Provider value={value}>
       {children}
