@@ -73,7 +73,7 @@ const Home = () => {
                     <AntDesign name="play" size={27} />
                   </Text>
                 </View>
-                <View className="justify-center items-center px-14">
+                <View className="justify-center items-center right-32">
                   <Text className="font-[Poppins-SemiBold] text-3xl mt-2">
                     PLAY
                   </Text>

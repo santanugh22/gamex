@@ -23,10 +23,34 @@ const Settings = () => {
       />
       <View style={{ flex: 1 }}>
         {/* Header */}
-        <View className="flex-row justify-between px-3">
-          <MaterialIcons name="settings" size={34} color="white" />
-          <AntDesign name="infocirlce" size={32} color="white" />
+        <View className="flex-row justify-between py-2  bg-indigo-950 items-center">
+          <View className="px-6">
+            <MaterialIcons name="settings" size={34} color="white" />
+          </View>
+          <View className="justify-center items-center py-1 mt-2 right-32">
+            <Text className="text-4xl font-[Poppins-Bold] text-white">
+              Settings
+            </Text>
+          </View>
         </View>
+
+        {/* Music and info option */}
+        <View>
+          <View>
+            <Text></Text>
+          </View>
+          <View></View>
+        </View>
+
+        {/* Buttons */}
+        <View>
+          <View className="w-[] bg-green-400 h-[80] rounded-xl">
+
+          </View>
+        </View>
+
+        {/* Footer */}
+        <View></View>
       </View>
 
       {/* Choose deck */}
