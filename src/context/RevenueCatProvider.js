@@ -49,10 +49,9 @@ export const RevenueCatProvider = ({ children }) => {
     }
   };
 
-  const purchaseAPackage = async (packageToPurchase) => {
+  const purchasePackage = async (packageToPurchase) => {
     try {
-      const { purchaserInfo, productIdentifier } =
-        await Purchases.purchasePackage(packageToPurchase);
+      const purchaserInfo = await Purchases.purchasePackage(packageToPurchase);
       if (purchaserInfo.entitlements.active["your_entitlement_id"]) {
         setUser({ bundle_purchased: true });
       }
@@ -78,6 +77,8 @@ export const RevenueCatProvider = ({ children }) => {
       console.error("Error updating customer info:", error);
     }
   };
+
+
 
   // Restore previous purchase
   const restorePurchase = async () => {
