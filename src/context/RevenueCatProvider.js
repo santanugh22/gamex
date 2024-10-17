@@ -24,7 +24,7 @@ export const RevenueCatProvider = ({ children }) => {
           Alert.alert("Platform not configured for in-app purchases");
         }
         setIsReady(true);
-        Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+        Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
         await loadOfferings();
       } catch (error) {
         console.error("Error initializing Purchases:", error);
