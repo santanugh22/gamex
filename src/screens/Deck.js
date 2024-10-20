@@ -262,6 +262,10 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 16,
     marginTop: 8,
+    width:WIDTH*0.4,
+    justifyContent:"center",
+    alignItems:"center"
+
   },
   unlockButtonText: {
     color: "white",

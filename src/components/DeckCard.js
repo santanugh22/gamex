@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     position: "absolute",
-    top: HEIGHT * 0.069,
+    top: HEIGHT * 0.12,
     left: WIDTH * 0.015,
     right: WIDTH * 0.015,
     justifyContent: "center",
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "Poppins-SemiBold",
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 13,
   },
   absoluteFill: {
     ...StyleSheet.absoluteFillObject,
