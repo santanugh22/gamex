@@ -16,15 +16,16 @@ export const RevenueCatProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        if (Platform.OS === "ios") {
-          await Purchases.configure({
-            apiKey: "appl_MOdzpKXixePcmhabljBfIwqxzbs",
-          });
-        } else {
-          Alert.alert("Platform not configured for in-app purchases");
-        }
+        await Purchases.configure({
+          apiKey: "appl_MOdzpKXixePcmhabljBfIwqxzbs",
+        });
+
         setIsReady(true);
-        Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+        Purchases.setLogLevel(LOG_LEVEL.DEBUG);
+        Purchases.addCustomerInfoUpdateListener((customerInfo) => {
+          console.log("customerInfo", customerInfo);
+          updateCustomerInfo(customerInfo);
+        });
         await loadOfferings();
       } catch (error) {
         console.error("Error initializing Purchases:", error);
@@ -36,13 +37,12 @@ export const RevenueCatProvider = ({ children }) => {
   // Load all the offerings a user can purchase
   const loadOfferings = async () => {
     try {
-      console.log("MEOW");
       const offerings = await Purchases.getOfferings();
-      console.log(offerings);
+
       const currentOffering = offerings.current;
-      console.log(currentOffering);
       if (currentOffering) {
         setPackages(currentOffering.availablePackages);
+        console.log("availablePackages", currentOffering.availablePackages[0]);
       }
     } catch (error) {
       console.error("Error loading offerings:", error);
@@ -52,7 +52,7 @@ export const RevenueCatProvider = ({ children }) => {
   const purchasePackage = async (packageToPurchase) => {
     try {
       const purchaserInfo = await Purchases.purchasePackage(packageToPurchase);
-      if (purchaserInfo.entitlements.active["your_entitlement_id"]) {
+      if (packageToPurchase.product.identifier == "gx_bundle") {
         setUser({ bundle_purchased: true });
       }
     } catch (error) {
@@ -63,22 +63,15 @@ export const RevenueCatProvider = ({ children }) => {
   };
 
   // Update customer info
-  const updateCustomerInfo = async () => {
+  const updateCustomerInfo = (customerInfo) => {
     try {
-      const customerInfo = await Purchases.getCustomerInfo();
-      setUser({
-        bundle_purchased: customerInfo.entitlements.active[
-          "your_entitlement_id"
-        ]
-          ? true
-          : false,
-      });
+      if (customerInfo.entitlements.active["gx_bundle"]) {
+        setUser({ bundle_purchased: true });
+      }
     } catch (error) {
       console.error("Error updating customer info:", error);
     }
   };
-
-
 
   // Restore previous purchase
   const restorePurchase = async () => {
@@ -94,7 +87,7 @@ export const RevenueCatProvider = ({ children }) => {
     restorePurchase,
     user,
     packages,
-    purchaseAPackage,
+    purchasePackage,
     updateCustomerInfo,
   };
 

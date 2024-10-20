@@ -9,7 +9,7 @@
       }
     ]
   },
-  "identifier" : "D60DBD25",
+  "identifier" : "73FCBAB9",
   "nonRenewingSubscriptions" : [
 
   ],
@@ -39,7 +39,7 @@
     "_applicationInternalID" : "6730121219",
     "_developerTeamID" : "K8HJN35N8N",
     "_failTransactionsEnabled" : false,
-    "_lastSynchronizedDate" : 750865341.33161199,
+    "_lastSynchronizedDate" : 750865728.02483499,
     "_locale" : "en_US",
     "_storefront" : "USA",
     "_storeKitErrors" : [
@@ -93,6 +93,10 @@
   "subscriptionGroups" : [
 
   ],
+  "subscriptionOffersKeyPair" : {
+    "id" : "F410E7E8",
+    "privateKey" : "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg9Dof7pmdMiJeYByBt29bR9Jw0TTG+Rg/hheIMyBP70WgCgYIKoZIzj0DAQehRANCAARrtX+xf94ilKPqfNlv+35XsSEVRiECOVK4H1i5Tj9iZREprUKnKfHO50p1PObo/orHtMwjYXoiYJH+uj94bs9U"
+  },
   "version" : {
     "major" : 4,
     "minor" : 0

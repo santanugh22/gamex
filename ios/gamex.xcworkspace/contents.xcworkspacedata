@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "container:../images/Gamex.storekit">
+   </FileRef>
+   <FileRef
       location = "group:gamex.xcodeproj">
    </FileRef>
    <FileRef

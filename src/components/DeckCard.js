@@ -8,12 +8,22 @@ import {
   Pressable,
 } from "react-native";
 import { BlurView } from "expo-blur";
-
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useRevenueCat } from "../context/RevenueCatProvider";
 
 const { height: HEIGHT, width: WIDTH } = Dimensions.get("screen");
 
 const DeckCard = ({ card }) => {
+  const { purchasePackage, packages } = useRevenueCat();
+
+  const handlePurchase = async () => {
+    if (packages.length > 0) {
+      await purchasePackage(packages[0]);
+    } else {
+      console.error("No packages available for purchase");
+    }
+  };
+
   return (
     <View style={styles.mainContainer} className="rounded-3xl overflow-hidden">
       <View
@@ -69,7 +79,7 @@ const DeckCard = ({ card }) => {
         )}
       </View>
       <View className="justify-center items-center mt-2">
-        <Pressable>
+        <Pressable onPress={handlePurchase}>
           <View
             className="px-4 rounded-3xl py-1 justify-center items-center border border-white"
             style={{

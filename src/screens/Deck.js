@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo } from "react";
+import React, { useCallback, useState, useMemo, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,7 @@ import {
   Pressable,
   FlatList,
   ImageBackground,
-  Dimensions
+  Dimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
@@ -17,13 +17,14 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import DeckCard from "../components/DeckCard";
 import FilterComponent from "../components/FilterComponent";
+import { useRevenueCat } from "../context/RevenueCatProvider";
 
-
-const {height:HEIGHT,width:WIDTH} = Dimensions.get('window');
+const { height: HEIGHT, width: WIDTH } = Dimensions.get("window");
 
 const Deck = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const { user, packages, purchasePackage } = useRevenueCat(); 
   const [filterData, setFilterData] = useState([
     {
       id: 1,
@@ -76,12 +77,12 @@ const Deck = () => {
       {
         id: 3,
         title: "RELATIONSHIPS",
-        isLocked: true,
+        isLocked: !user.bundle_purchased,
         image: require("../assets/relationships.png"),
         color: "#F87171",
       },
     ],
-    []
+    [user.bundle_purchased]
   );
 
   const renderItems = useCallback(({ item }) => {
@@ -151,8 +152,8 @@ const Deck = () => {
         <ImageBackground
           source={require("../assets/curvybg.png")}
           style={{
-            height: HEIGHT*0.15,
-            width: WIDTH*0.95,
+            height: HEIGHT * 0.15,
+            width: WIDTH * 0.95,
             borderRadius: 30,
             overflow: "hidden",
             alignSelf: "center",
