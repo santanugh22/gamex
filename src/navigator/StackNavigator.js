@@ -18,3 +18,6 @@ const StackNavigator = () => {
 };
 export default StackNavigator;
 const styles = StyleSheet.create({});
+
+
+// appl_MOdzpKXixePcmhabljBfIwqxzbs;

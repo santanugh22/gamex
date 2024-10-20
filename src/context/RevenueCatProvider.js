@@ -1,48 +1,52 @@
-import { useContext, createContext, useState, useEffect } from "react";
-import { Platform, Alert } from "react-native";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import { Platform, ActivityIndicator } from "react-native";
 import Purchases, { LOG_LEVEL } from "react-native-purchases";
 
 const RevenueCatContext = createContext(null);
 
-export const useRevenueCat = () => {
-  return useContext(RevenueCatContext);
-};
+export const useRevenueCat = () => useContext(RevenueCatContext);
 
 export const RevenueCatProvider = ({ children }) => {
-  const [user, setUser] = useState({ bundle_purchased: false });
+  const [user, setUser] = useState({ bundlePurchased: false });
   const [packages, setPackages] = useState([]);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const init = async () => {
       try {
+        const apiKey =
+          Platform.OS === "ios"
+            ? "appl_MOdzpKXixePcmhabljBfIwqxzbs" // Secure your API keys
+            : "your_android_api_key"; // Secure your API keys
         await Purchases.configure({
-          apiKey: "appl_MOdzpKXixePcmhabljBfIwqxzbs",
+          apiKey,
         });
-
         setIsReady(true);
-        Purchases.setLogLevel(LOG_LEVEL.DEBUG);
-        Purchases.addCustomerInfoUpdateListener((customerInfo) => {
-          console.log("customerInfo", customerInfo);
-          updateCustomerInfo(customerInfo);
-        });
+        Purchases.setLogLevel(LOG_LEVEL.VERBOSE);
+        Purchases.addCustomerInfoUpdateListener(updateCustomerInfo);
         await loadOfferings();
       } catch (error) {
         console.error("Error initializing Purchases:", error);
       }
     };
     init();
+
+    return () => {
+      Purchases.removeCustomerInfoUpdateListener(updateCustomerInfo);
+    };
   }, []);
 
-  // Load all the offerings a user can purchase
   const loadOfferings = async () => {
     try {
       const offerings = await Purchases.getOfferings();
-
-      const currentOffering = offerings.current;
-      if (currentOffering) {
-        setPackages(currentOffering.availablePackages);
-        console.log("availablePackages", currentOffering.availablePackages[0]);
+      if (offerings.current) {
+        setPackages(offerings.current.availablePackages);
       }
     } catch (error) {
       console.error("Error loading offerings:", error);
@@ -51,48 +55,46 @@ export const RevenueCatProvider = ({ children }) => {
 
   const purchasePackage = async (packageToPurchase) => {
     try {
-      const purchaserInfo = await Purchases.purchasePackage(packageToPurchase);
-      if (packageToPurchase.product.identifier == "gx_bundle") {
-        setUser({ bundle_purchased: true });
-      }
+      const { purchaserInfo } = await Purchases.purchasePackage(
+        packageToPurchase
+      );
+      console.log("Purchase successful:", purchaserInfo);
+      updateCustomerInfo(purchaserInfo);
+      setUser({ bundlePurchased: true });
     } catch (error) {
-      if (!error.userCancelled) {
+      if (error?.userCancelled) {
+        console.log("User cancelled purchase");
+      } else {
         console.error("Error purchasing package:", error);
       }
     }
   };
 
-  // Update customer info
-  const updateCustomerInfo = (customerInfo) => {
-    try {
-      if (customerInfo.entitlements.active["gx_bundle"]) {
-        setUser({ bundle_purchased: true });
-      }
-    } catch (error) {
-      console.error("Error updating customer info:", error);
-    }
-  };
+  const updateCustomerInfo = useCallback((customerInfo) => {
+    const bundlePurchased =
+      customerInfo.entitlements.active["gx_bundle"] != null;
+    setUser({ bundlePurchased });
+  }, []);
 
-  // Restore previous purchase
-  const restorePurchase = async () => {
+  const restorePurchases = async () => {
     try {
-      const customer = await Purchases.restorePurchases();
-      return customer;
+      const customerInfo = await Purchases.restorePurchases();
+      updateCustomerInfo(customerInfo);
     } catch (error) {
       console.error("Error restoring purchases:", error);
     }
   };
 
   const value = {
-    restorePurchase,
     user,
     packages,
     purchasePackage,
-    updateCustomerInfo,
+    restorePurchases,
+    isReady,
   };
 
   if (!isReady) {
-    return null;
+    return <ActivityIndicator />;
   }
 
   return (

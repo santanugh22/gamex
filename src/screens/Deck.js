@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useMemo, useContext } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import {
   StyleSheet,
   Text,
@@ -24,7 +24,7 @@ const { height: HEIGHT, width: WIDTH } = Dimensions.get("window");
 const Deck = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
-  const { user, packages, purchasePackage } = useRevenueCat(); 
+  const { user, packages, purchasePackage } = useRevenueCat();
   const [filterData, setFilterData] = useState([
     {
       id: 1,
@@ -77,12 +77,12 @@ const Deck = () => {
       {
         id: 3,
         title: "RELATIONSHIPS",
-        isLocked: !user.bundle_purchased,
+        isLocked: !user.bundlePurchased,
         image: require("../assets/relationships.png"),
         color: "#F87171",
       },
     ],
-    [user.bundle_purchased]
+    [user.bundlePurchased]
   );
 
   const renderItems = useCallback(({ item }) => {
@@ -101,26 +101,33 @@ const Deck = () => {
     );
   }, []);
 
+  const handleUnlockAllDecks = useCallback(() => {
+    if (packages.length > 0) {
+      purchasePackage(packages[0]);
+    } else {
+      console.error("No packages available for purchase");
+    }
+  }, [packages, purchasePackage]);
+
   return (
     <SafeAreaView
-      style={{
-        flex: 1,
-        paddingTop: insets.top,
-        paddingLeft: insets.left,
-        paddingRight: insets.right,
-        paddingBottom: insets.bottom,
-      }}
+      style={[
+        styles.container,
+        {
+          paddingTop: insets.top,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+          paddingBottom: insets.bottom,
+        },
+      ]}
     >
       <Image
         source={require("../assets/bg.jpeg")}
-        style={{
-          ...StyleSheet.absoluteFillObject,
-          objectFit: "cover",
-        }}
+        style={styles.backgroundImage}
       />
-      <View style={{ flex: 1 }}>
+      <View style={styles.content}>
         {/* Header */}
-        <View className="flex-row justify-between px-3">
+        <View style={styles.header}>
           <Pressable onPress={() => navigation.navigate("Settings")}>
             <MaterialIcons name="settings" size={34} color="white" />
           </Pressable>
@@ -128,91 +135,164 @@ const Deck = () => {
         </View>
 
         {/* Choose deck */}
-        <View className="mt-10">
-          <View className="justify-center items-center">
-            <Text className="font-[Poppins-Bold] text-3xl tracking-widest text-white">
-              CHOOSE DECK
-            </Text>
-          </View>
-          <View className="mt-7 justify-center items-center">
-            <FlatList
-              data={deckData}
-              renderItem={renderItems}
-              horizontal
-              keyExtractor={(item) => item.id.toString()}
-              initialNumToRender={3}
-              contentContainerStyle={{
-                gap: 17,
-              }}
-            />
-          </View>
+        <View style={styles.chooseDeckSection}>
+          <Text style={styles.chooseDeckText}>CHOOSE DECK</Text>
+          <FlatList
+            data={deckData}
+            renderItem={renderItems}
+            horizontal
+            keyExtractor={(item) => item.id.toString()}
+            initialNumToRender={3}
+            contentContainerStyle={styles.deckList}
+          />
         </View>
 
         {/* Package buy */}
         <ImageBackground
           source={require("../assets/curvybg.png")}
-          style={{
-            height: HEIGHT * 0.15,
-            width: WIDTH * 0.95,
-            borderRadius: 30,
-            overflow: "hidden",
-            alignSelf: "center",
-          }}
+          style={styles.packageBuyBackground}
         >
-          <View className="flex-row">
-            <View className="justify-center items-center h-full w-1/3 top-5">
-              <Text>
-                <FontAwesome name="lock" size={44} color="black" />
-              </Text>
+          <View style={styles.packageBuyContent}>
+            <View style={styles.lockIconContainer}>
+              <FontAwesome name="lock" size={44} color="black" />
             </View>
-            <View className="w-1/3 h-full justify-center items-center">
-              <View className="mt-7">
-                <Text className="text-indigo-950 text-xl font-[Poppins-Bold] tracking-tighter">
-                  EXPLORE
+            <View style={styles.packageTextContainer}>
+              <Text style={styles.packageTitle}>EXPLORE</Text>
+              <Text style={styles.packageTitle}>PREMIUM DECKS</Text>
+              <Pressable
+                style={styles.unlockButton}
+                onPress={handleUnlockAllDecks}
+              >
+                <Text style={styles.unlockButtonText}>
+                  Unlock all decks ${packages[0]?.product.price}
                 </Text>
-                <Text className="text-indigo-950 text-xl font-[Poppins-Bold] tracking-tighter">
-                  PREMIUM DECKS
-                </Text>
-              </View>
-              <View className="bg-indigo-950 p-1 w-full py-2 rounded-2xl">
-                <Text className="text-white text-sm font-[Poppins-Bold] tracking-tighter">
-                  Unlock all decks $1000
-                </Text>
-              </View>
+              </Pressable>
             </View>
-            <View className="w-1/3 h-full justify-center items-center">
-              <View>
-                <Image
-                  source={require("../assets/cards.png")}
-                  className="h-16 w-16"
-                />
-              </View>
+            <View style={styles.packageImageContainer}>
+              <Image
+                source={require("../assets/cards.png")}
+                style={styles.packageImage}
+              />
             </View>
           </View>
         </ImageBackground>
 
         {/* Filters */}
-        <View className="mt-3">
-          <View className="m-4 px-3 flex-1">
-            <Text className="text-2xl font-[Poppins-SemiBold] text-white tracking-widest">
-              FILTERS
-            </Text>
-          </View>
-          <View>
-            <FlatList
-              data={filterData}
-              renderItem={renderFilterItems}
-              keyExtractor={(item) => item.id.toString()}
-              initialNumToRender={3}
-              contentContainerStyle={{
-                gap: 10,
-              }}
-            />
-          </View>
+        <View style={styles.filtersSection}>
+          <Text style={styles.filtersTitle}>FILTERS</Text>
+          <FlatList
+            data={filterData}
+            renderItem={renderFilterItems}
+            keyExtractor={(item) => item.id.toString()}
+            initialNumToRender={3}
+            contentContainerStyle={styles.filterList}
+          />
         </View>
       </View>
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  backgroundImage: {
+    ...StyleSheet.absoluteFillObject,
+    objectFit: "cover",
+  },
+  content: {
+    flex: 1,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 12,
+  },
+  chooseDeckSection: {
+    marginTop: 40,
+  },
+  chooseDeckText: {
+    fontFamily: "Poppins-Bold",
+    fontSize: 24,
+    letterSpacing: 2,
+    color: "white",
+    textAlign: "center",
+  },
+  deckList: {
+    gap: 17,
+    paddingHorizontal: 12,
+    marginTop: 28,
+  },
+  packageBuyBackground: {
+    height: HEIGHT * 0.15,
+    width: WIDTH * 0.95,
+    borderRadius: 30,
+    overflow: "hidden",
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  packageBuyContent: {
+    flexDirection: "row",
+    height: "100%",
+  },
+  lockIconContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "33%",
+    height: "100%",
+    paddingTop: 20,
+  },
+  packageTextContainer: {
+    width: "33%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 28,
+  },
+  packageTitle: {
+    color: "#1E293B",
+    fontSize: 16,
+    fontFamily: "Poppins-Bold",
+    letterSpacing: -0.5,
+  },
+  unlockButton: {
+    backgroundColor: "#1E293B",
+    paddingHorizontal: 4,
+    paddingVertical: 8,
+    borderRadius: 16,
+    marginTop: 8,
+  },
+  unlockButtonText: {
+    color: "white",
+    fontSize: 12,
+    fontFamily: "Poppins-Bold",
+    letterSpacing: -0.5,
+  },
+  packageImageContainer: {
+    width: "33%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  packageImage: {
+    height: 64,
+    width: 64,
+  },
+  filtersSection: {
+    marginTop: 12,
+    paddingHorizontal: 16,
+  },
+  filtersTitle: {
+    fontSize: 20,
+    fontFamily: "Poppins-SemiBold",
+    color: "white",
+    letterSpacing: 2,
+  },
+  filterList: {
+    gap: 10,
+    marginTop: 12,
+  },
+});
 
 export default Deck;
